@@ -1,64 +1,63 @@
- HEAD
-# RedSocialAngular
+# Red Social Angular
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.3.
+Este es un proyecto de red social construido con **Angular** y **Firebase**.
 
-## Development server
+## 🚀 Requisitos previos
+- Node.js (versión 18 o superior recomendada)  
+- Angular CLI instalado globalmente:  
+  ```bash
+  npm install -g @angular/cli
+Una cuenta de Firebase configurada con Firestore y Authentication.
 
-To start a local development server, run:
+⚙️ Instalación
+Clona el repositorio y entra en el directorio del proyecto:
 
-```bash
-ng serve
-```
+bash
+Copiar código
+git clone https://github.com/amolrod/red-social-angular.git
+cd red-social-angular
+Instala las dependencias:
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+bash
+Copiar código
+npm install
+▶️ Ejecución en desarrollo
+Para levantar el servidor de desarrollo:
 
-## Code scaffolding
+bash
+Copiar código
+ng serve --open
+Esto abrirá la aplicación en http://localhost:4200/.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
+🛠️ Construcción para producción
+bash
+Copiar código
 ng build
-```
+Los archivos compilados estarán en la carpeta dist/.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+📂 Estructura básica
+src/app/core/ → Servicios y lógica principal
 
-## Running unit tests
+src/app/models/ → Modelos de datos (UserProfile, Post, etc.)
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+src/app/components/ → Componentes de la aplicación
 
-```bash
-ng test
-```
+src/environments/ → Configuración de entornos (añadir claves de Firebase aquí)
 
-## Running end-to-end tests
+🔑 Configuración de Firebase
+En src/environments/ crea un archivo environment.ts con tu configuración de Firebase:
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
-
-# red-social-angular
-red social
-9a7b7b77471bf13d124a7b680d176c62ac24ad21
+ts
+Copiar código
+export const environment = {
+  production: false,
+  firebase: {
+    apiKey: "TU_API_KEY",
+    authDomain: "TU_PROYECTO.firebaseapp.com",
+    projectId: "TU_PROJECT_ID",
+    storageBucket: "TU_PROJECT_ID.appspot.com",
+    messagingSenderId: "SENDER_ID",
+    appId: "APP_ID"
+  }
+};
+Para producción, usa environment.prod.ts con las credenciales correspondientes.
