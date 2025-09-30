@@ -1,0 +1,53 @@
+.main-toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: 64px;
+}
+
+.logo {
+  font-weight: 500;
+  font-size: 1.2em;
+  margin-left: 8px;
+}
+
+.menu-button {
+  margin-right: 16px;
+  
+  // Ocultar en escritorio
+  @media (min-width: 768px) {
+    display: none;
+  }
+}
+
+.desktop-nav {
+  display: flex;
+  gap: 8px;
+  
+  // Ocultar en móvil
+  @media (max-width: 767px) {
+    display: none;
+  }
+}
+
+.main-container {
+  margin-top: 64px; // Espacio para la toolbar fija
+  min-height: calc(100vh - 64px);
+}
+
+.mobile-sidenav {
+  width: 250px;
+}
+
+.main-content {
+  padding: 16px 0;
+}
+
+// Responsive para tablet y escritorio
+@media (min-width: 768px) {
+  .main-content {
+    padding: 24px 0;
+  }
+}

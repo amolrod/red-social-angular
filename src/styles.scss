@@ -1,0 +1,36 @@
+// Importar Angular Material y tema
+@use '@angular/material' as mat;
+
+// Incluir los estilos principales de Material
+@include mat.core();
+
+// Configurar tu tema Azure/Blue
+html {
+  @include mat.theme((
+    color: (
+      theme-type: light,
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}
+
+// Estilos globales para tu red social
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+// Espaciado global
+.container {
+  padding: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+// Clases útiles
+.spacer {
+  flex: 1 1 auto;
+}
