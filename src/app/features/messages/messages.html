@@ -1,0 +1,136 @@
+<div class="messages-container">
+  
+  <!-- Columna izquierda: Lista de conversaciones -->
+  <div class="conversations-list">
+    <div class="conversations-header">
+      <h2>Mensajes</h2>
+      <button mat-icon-button color="primary" (click)="toggleNewChatDialog()" matTooltip="Nuevo chat">
+        <mat-icon>add_circle</mat-icon>
+      </button>
+    </div>
+
+    <!-- Diálogo para nuevo chat -->
+    <div class="new-chat-dialog" *ngIf="showNewChatDialog">
+    <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email del usuario</mat-label>
+        <input 
+        matInput 
+        [(ngModel)]="newChatEmail" 
+        placeholder="usuario@example.com"
+        (keyup.enter)="startNewChat()"
+        [disabled]="isCreatingChat">
+    </mat-form-field>
+    <div class="dialog-actions">
+        <button 
+        mat-raised-button 
+        color="primary" 
+        (click)="startNewChat()"
+        [disabled]="isCreatingChat || !newChatEmail.trim()">
+        <mat-icon *ngIf="!isCreatingChat">add</mat-icon>
+        <mat-spinner *ngIf="isCreatingChat" diameter="20"></mat-spinner>
+        {{ isCreatingChat ? 'Creando...' : 'Crear Chat' }}
+        </button>
+        <button mat-button (click)="toggleNewChatDialog()" [disabled]="isCreatingChat">
+        Cancelar
+        </button>
+    </div>
+    </div>
+
+    <!-- Lista de conversaciones -->
+    <div class="conversations-items">
+      <div 
+        *ngFor="let conversation of conversations$ | async" 
+        class="conversation-item"
+        [class.active]="selectedConversation?.id === conversation.id"
+        (click)="selectConversation(conversation)">
+        
+        <div class="conversation-avatar">
+          <mat-icon>account_circle</mat-icon>
+        </div>
+        
+        <div class="conversation-info">
+          <div class="conversation-name">{{ getOtherUserEmail(conversation) }}</div>
+          <div class="conversation-last-message">{{ conversation.lastMessage || 'Sin mensajes' }}</div>
+        </div>
+        
+        <div class="conversation-time">
+          {{ getMessageDate(conversation.lastMessageTime) | date:'short' }}
+        </div>
+      </div>
+
+      <!-- Mensaje si no hay conversaciones -->
+      <div *ngIf="(conversations$ | async)?.length === 0" class="no-conversations">
+        <mat-icon>chat_bubble_outline</mat-icon>
+        <p>No tienes conversaciones</p>
+        <p class="subtitle">Inicia un nuevo chat haciendo clic en +</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Columna derecha: Chat -->
+  <div class="chat-area">
+    
+    <!-- Seleccionar conversación -->
+    <div *ngIf="!selectedConversation" class="no-chat-selected">
+      <mat-icon>forum</mat-icon>
+      <h3>Selecciona una conversación</h3>
+      <p>Elige un chat de la lista o inicia uno nuevo</p>
+    </div>
+
+    <!-- Chat activo -->
+    <div *ngIf="selectedConversation" class="chat-active">
+      
+      <!-- Header del chat -->
+      <div class="chat-header">
+        <div class="chat-user-info">
+          <mat-icon>account_circle</mat-icon>
+          <span>{{ getOtherUserEmail(selectedConversation) }}</span>
+        </div>
+      </div>
+
+      <!-- Mensajes -->
+      <div class="messages-area" #messagesContainer>
+        <div 
+          *ngFor="let message of messages$ | async" 
+          class="message-wrapper"
+          [class.my-message]="isMyMessage(message)"
+          [class.other-message]="!isMyMessage(message)">
+          
+          <div class="message-bubble">
+            <div class="message-content">{{ message.content }}</div>
+            <div class="message-time">
+              {{ getMessageDate(message.timestamp) | date:'short' }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Mensaje si no hay mensajes -->
+        <div *ngIf="(messages$ | async)?.length === 0" class="no-messages">
+          <p>No hay mensajes aún. ¡Envía el primero!</p>
+        </div>
+      </div>
+
+      <!-- Input para nuevo mensaje -->
+      <div class="message-input-area">
+        <mat-form-field appearance="outline" class="full-width">
+          <input 
+            matInput 
+            [(ngModel)]="newMessageText" 
+            placeholder="Escribe un mensaje..."
+            (keyup.enter)="sendMessage()">
+        </mat-form-field>
+        <button 
+          mat-fab 
+          color="primary" 
+          (click)="sendMessage()"
+          [disabled]="!newMessageText.trim()">
+          <mat-icon>send</mat-icon>
+        </button>
+        
+        
+      </div>
+    </div>
+
+  </div>
+
+</div>

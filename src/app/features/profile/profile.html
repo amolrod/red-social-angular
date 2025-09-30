@@ -1,0 +1,114 @@
+<div class="error-container" *ngIf="errorMessage && !isLoading">
+  <mat-card style="background: #f8d7da; color: #721c24; margin: 20px;">
+    <mat-card-content>
+      <h3>Error</h3>
+      <p>{{ errorMessage }}</p>
+      <button mat-raised-button (click)="loadProfile()">Reintentar</button>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<div class="profile-container" *ngIf="!isLoading && userProfile">
+  
+  <mat-card class="profile-card">
+    <mat-card-content>
+      <div class="profile-header">
+        <div class="profile-avatar">
+          <mat-icon>account_circle</mat-icon>
+        </div>
+        
+        <div class="profile-info" *ngIf="!isEditing">
+          <h2>{{ userProfile.displayName || 'Usuario sin nombre' }}</h2>
+          <p class="email">{{ userProfile.email }}</p>
+          <p class="bio" *ngIf="userProfile.bio">{{ userProfile.bio }}</p>
+          <p class="bio placeholder" *ngIf="!userProfile.bio">Añade una biografía...</p>
+          
+          <button mat-raised-button color="primary" (click)="toggleEdit()">
+            <mat-icon>edit</mat-icon>
+            Editar Perfil
+          </button>
+        </div>
+
+        <div class="profile-info" *ngIf="isEditing">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nombre</mat-label>
+            <input matInput [(ngModel)]="editDisplayName" placeholder="Tu nombre">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Biografía</mat-label>
+            <textarea 
+              matInput 
+              [(ngModel)]="editBio" 
+              placeholder="Cuéntanos sobre ti..."
+              rows="3"
+              maxlength="200"></textarea>
+            <mat-hint align="end">{{ editBio.length }}/200</mat-hint>
+          </mat-form-field>
+
+          <div class="edit-actions">
+            <button mat-raised-button color="primary" (click)="saveProfile()">
+              <mat-icon>save</mat-icon>
+              Guardar
+            </button>
+            <button mat-button (click)="cancelEdit()">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-stats">
+        <div class="stat-item">
+          <mat-icon>article</mat-icon>
+          <span class="stat-number">{{ (userPosts$ | async)?.length || 0 }}</span>
+          <span class="stat-label">Posts</span>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="user-posts-section">
+    <h3>Mis Posts</h3>
+    
+    <div class="posts-grid" *ngIf="(userPosts$ | async) as posts">
+      <mat-card *ngFor="let post of posts" class="post-card">
+        <mat-card-header>
+          <mat-card-title>Publicado el {{ getPostDate(post.createdAt) | date:'short' }}</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <p>{{ post.content }}</p>
+        </mat-card-content>
+
+        <mat-divider></mat-divider>
+
+        <mat-card-actions>
+          <button mat-button disabled>
+            <mat-icon>favorite</mat-icon>
+            {{ post.likes }} Likes
+          </button>
+          <button mat-button disabled>
+            <mat-icon>comment</mat-icon>
+            {{ (post.comments || []).length }} Comentarios
+          </button>
+          <span class="spacer"></span>
+          <button mat-icon-button color="warn" (click)="deletePost(post.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-card-actions>
+      </mat-card>
+
+      <div *ngIf="posts.length === 0" class="no-posts">
+        <mat-icon>article</mat-icon>
+        <p>Aún no has publicado nada</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="loading-container" *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+  <p>Cargando perfil...</p>
+</div>
