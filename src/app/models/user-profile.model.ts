@@ -4,5 +4,8 @@ export interface UserProfile {
   displayName?: string;
   photoURL?: string;
   bio?: string;
-  createdAt: Date;
+  followers?: string[];      // ← AÑADIDO (UIDs de seguidores)
+  following?: string[];      // ← AÑADIDO (UIDs que sigue)
+  followersCount?: number;   // ← AÑADIDO (contador)
+  followingCount?: number;   // ← AÑADIDO (contador)
 }

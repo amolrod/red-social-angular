@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { AuthService } from '../../core/auth/auth';
 import { UserService } from '../../core/services/user';
@@ -31,14 +31,13 @@ export class Profile implements OnInit, OnDestroy {
     private authService: AuthService,
     private userService: UserService,
     private postService: PostService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    // Cargar perfil al iniciar
     this.loadProfile();
     
-    // Detectar cambios de ruta para recargar
     this.routerSubscription = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
@@ -65,6 +64,7 @@ export class Profile implements OnInit, OnDestroy {
         this.editDisplayName = this.userProfile.displayName || '';
         this.editBio = this.userProfile.bio || '';
         this.loadUserPosts();
+        this.cdr.detectChanges();
       } else {
         this.errorMessage = 'No se pudo cargar el perfil';
       }
@@ -73,6 +73,7 @@ export class Profile implements OnInit, OnDestroy {
       this.errorMessage = 'Error al cargar el perfil: ' + error.message;
     } finally {
       this.isLoading = false;
+      this.cdr.detectChanges();
     }
   }
 
@@ -101,6 +102,7 @@ export class Profile implements OnInit, OnDestroy {
       this.userProfile.bio = this.editBio;
       
       this.isEditing = false;
+      this.cdr.detectChanges();
       alert('Perfil actualizado correctamente');
     } catch (error) {
       console.error('Error al actualizar perfil:', error);

@@ -1,0 +1,132 @@
+<div class="user-profile-container">
+  
+  <div class="loading-state" *ngIf="isLoading">
+    <mat-spinner diameter="60"></mat-spinner>
+    <p>Cargando perfil...</p>
+  </div>
+
+  <div class="error-state" *ngIf="errorMessage && !isLoading">
+    <mat-icon>error_outline</mat-icon>
+    <h2>{{ errorMessage }}</h2>
+    <button mat-raised-button color="primary" routerLink="/search">
+      <mat-icon>search</mat-icon>
+      Buscar Usuarios
+    </button>
+  </div>
+
+  <div *ngIf="userProfile && !isLoading" class="profile-content">
+    
+    <mat-card class="profile-header-card">
+      <div class="profile-header">
+        <div class="profile-avatar">
+          <div class="avatar-circle">
+            {{ getInitials(userProfile.displayName || userProfile.email) }}
+          </div>
+        </div>
+
+        <div class="profile-info">
+          <h1>{{ userProfile.displayName || 'Usuario' }}</h1>
+          <p class="email">{{ userProfile.email }}</p>
+          
+          <p class="bio" *ngIf="userProfile.bio">{{ userProfile.bio }}</p>
+          
+          <div class="profile-actions">
+            <!-- Si es el propio perfil -->
+            <button 
+              *ngIf="isOwnProfile" 
+              mat-raised-button 
+              color="primary" 
+              (click)="goToOwnProfile()">
+              <mat-icon>edit</mat-icon>
+              Editar Perfil
+            </button>
+
+            <!-- Si es otro usuario -->
+            <ng-container *ngIf="!isOwnProfile">
+              <button 
+                mat-raised-button 
+                [color]="isFollowing ? 'accent' : 'primary'"
+                (click)="toggleFollow()"
+                [disabled]="isFollowLoading">
+                <mat-spinner *ngIf="isFollowLoading" diameter="20"></mat-spinner>
+                <mat-icon *ngIf="!isFollowLoading">{{ isFollowing ? 'person_remove' : 'person_add' }}</mat-icon>
+                {{ isFollowing ? 'Dejar de seguir' : 'Seguir' }}
+              </button>
+
+              <button 
+                mat-raised-button 
+                color="primary" 
+                (click)="startChat()">
+                <mat-icon>chat</mat-icon>
+                Enviar Mensaje
+              </button>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+
+    <mat-card class="stats-card">
+      <div class="stats">
+        <div class="stat-item">
+          <mat-icon>article</mat-icon>
+          <div class="stat-info">
+            <span class="stat-value">{{ (userPosts$ | async)?.length || 0 }}</span>
+            <span class="stat-label">Posts</span>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <mat-icon>people</mat-icon>
+          <div class="stat-info">
+            <span class="stat-value">{{ userProfile.followersCount || 0 }}</span>
+            <span class="stat-label">Seguidores</span>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <mat-icon>person_add</mat-icon>
+          <div class="stat-info">
+            <span class="stat-value">{{ userProfile.followingCount || 0 }}</span>
+            <span class="stat-label">Siguiendo</span>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+
+    <div class="user-posts-section">
+      <h2>Posts de {{ userProfile.displayName || 'este usuario' }}</h2>
+
+      <div class="posts-list" *ngIf="(userPosts$ | async)?.length; else noPosts">
+        <mat-card *ngFor="let post of userPosts$ | async" class="post-card">
+          <mat-card-content>
+            <div class="post-header">
+              <span class="post-date">{{ getPostDate(post.createdAt) | date:'short' }}</span>
+            </div>
+            <p class="post-content">{{ post.content }}</p>
+            
+            <div class="post-stats">
+              <span class="stat">
+                <mat-icon>favorite</mat-icon>
+                {{ post.likes }} likes
+              </span>
+              <span class="stat">
+                <mat-icon>comment</mat-icon>
+                {{ post.comments.length || 0 }} comentarios
+              </span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <ng-template #noPosts>
+        <div class="no-posts">
+          <mat-icon>post_add</mat-icon>
+          <p>Este usuario aún no ha publicado nada</p>
+        </div>
+      </ng-template>
+    </div>
+
+  </div>
+
+</div>

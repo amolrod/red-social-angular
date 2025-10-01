@@ -1,0 +1,23 @@
+<div class="create-post-form">
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>¿Qué estás pensando?</mat-label>
+    <textarea 
+      matInput 
+      [(ngModel)]="newPostContent"
+      placeholder="Comparte algo con tus seguidores..."
+      rows="6"
+      maxlength="500">
+    </textarea>
+    <mat-hint align="end">{{ newPostContent.length }}/500</mat-hint>
+  </mat-form-field>
+
+  <button 
+    mat-raised-button 
+    color="primary" 
+    class="publish-btn"
+    (click)="createPost()"
+    [disabled]="isLoading || !newPostContent.trim()">
+    <mat-icon>send</mat-icon>
+    {{ isLoading ? 'Publicando...' : 'Publicar' }}
+  </button>
+</div>

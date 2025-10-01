@@ -2,64 +2,197 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
+  min-height: calc(100vh - 100px);
 }
 
+// ============================================
+// TARJETA DE NUEVO POST
+// ============================================
 .new-post-card {
   margin-bottom: 30px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+  transition: transform 0.3s, box-shadow 0.3s;
+  padding: 24px; // ← AÑADIDO: Espaciado interno generoso
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(102, 126, 234, 0.4);
+  }
+
+  // Override del padding de mat-card
+  ::ng-deep .mat-mdc-card-content {
+    padding: 0 !important;
+  }
 
   h2 {
-    margin: 0 0 15px 0;
+    margin: 0 0 24px 0; // ← MEJORADO: Más espacio debajo del título
     color: white;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  // Botón de filtro del feed
+  .feed-filter {
+    margin-bottom: 24px; // ← MEJORADO: Más espacio
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px; // ← MEJORADO: Padding más generoso
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 28px; // ← MEJORADO: Más redondeado
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      min-width: 140px; // ← AÑADIDO: Ancho mínimo
+      justify-content: center; // ← AÑADIDO: Centrar contenido
+
+      mat-icon {
+        color: white;
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.25);
+        border-color: rgba(255, 255, 255, 0.5);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+
+      &[color="primary"] {
+        background: white;
+        color: #667eea;
+        border-color: white;
+        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+
+        mat-icon {
+          color: #667eea;
+        }
+
+        &:hover {
+          background: #f8f9ff;
+          transform: translateY(-2px);
+        }
+      }
+    }
   }
 
   .full-width {
     width: 100%;
+    margin-bottom: 16px; // ← AÑADIDO: Espacio debajo del textarea
   }
 
+  // Estilos del campo de texto
   ::ng-deep .mat-mdc-form-field {
+    width: 100%;
+
     .mat-mdc-text-field-wrapper {
       background: white;
-      border-radius: 8px;
+      border-radius: 12px;
+      padding: 8px; // ← MEJORADO: Más padding interno
+
+      .mat-mdc-form-field-flex {
+        background: white;
+        border-radius: 12px;
+        padding: 4px 12px; // ← AÑADIDO: Padding horizontal
+      }
+
+      textarea.mat-mdc-input-element {
+        padding: 12px; // ← AÑADIDO: Padding para el textarea
+        font-size: 16px;
+        line-height: 1.6;
+      }
+    }
+
+    .mat-mdc-form-field-focus-overlay {
+      background: transparent;
     }
   }
 
-  button {
-    margin-top: 10px;
+  // Botón de publicar
+  button[mat-raised-button] {
+    margin-top: 0; // ← CAMBIADO: Ya hay margen en .full-width
     background: white;
     color: #667eea;
+    border-radius: 12px;
+    padding: 14px 36px; // ← MEJORADO: Más alto y ancho
+    font-weight: 700;
+    font-size: 16px;
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+    transition: all 0.3s;
+    min-height: 48px; // ← AÑADIDO: Altura mínima
 
-    &:hover {
-      background: #f5f5f5;
+    mat-icon {
+      margin-right: 8px;
+    }
+
+    &:hover:not(:disabled) {
+      background: #f8f9ff;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(255, 255, 255, 0.4);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
   }
 }
 
+// ============================================
+// FEED DE POSTS
+// ============================================
 .posts-feed {
   .post-card {
-    margin-bottom: 20px;
-    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 24px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    background: white;
 
     &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     }
 
+    // Override padding global de Material
+    ::ng-deep .mat-mdc-card-content {
+      padding: 24px !important; // ← MEJORADO: Padding consistente
+    }
+
+    // Header del post
     mat-card-header {
-      margin-bottom: 15px;
+      padding: 20px 24px; // ← MEJORADO: Padding horizontal mayor
+      background: linear-gradient(to bottom, #fafafa, white);
 
       .post-avatar {
         display: flex;
         align-items: center;
         justify-content: center;
-        background: #667eea;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
+        border-radius: 50%;
+        width: 48px;
+        height: 48px;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 
         mat-icon {
-          font-size: 40px;
-          width: 40px;
-          height: 40px;
+          font-size: 32px;
+          width: 32px;
+          height: 32px;
         }
       }
 
@@ -67,88 +200,178 @@
         display: flex;
         align-items: center;
         gap: 10px;
+        font-size: 16px;
+        font-weight: 700;
+        color: #333;
+
+        .author-name {
+          transition: color 0.2s;
+
+          &.clickable {
+            cursor: pointer;
+
+            &:hover {
+              color: #667eea;
+              text-decoration: underline;
+            }
+          }
+        }
 
         .own-post-badge {
-          background: #667eea;
+          background: linear-gradient(135deg, #667eea, #764ba2);
           color: white;
-          padding: 2px 8px;
+          padding: 4px 12px;
           border-radius: 12px;
-          font-size: 12px;
-          font-weight: 600;
+          font-size: 11px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
         }
+      }
+
+      mat-card-subtitle {
+        color: #999;
+        font-size: 13px;
+        margin-top: 4px;
       }
     }
 
-    .post-content {
-      font-size: 16px;
-      line-height: 1.6;
-      color: #333;
-      white-space: pre-wrap;
-      word-wrap: break-word;
+    // Contenido del post
+    mat-card-content {
+      .post-content {
+        font-size: 16px;
+        line-height: 1.7;
+        color: #333;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        margin: 0;
+        font-weight: 400;
+      }
     }
 
+    // Acciones del post
     mat-card-actions {
       display: flex;
       align-items: center;
-      gap: 5px;
-      padding: 10px 16px;
+      gap: 8px;
+      padding: 12px 24px; // ← MEJORADO: Padding horizontal mayor
+      border-top: 1px solid #f0f0f0;
+      background: #fafafa;
 
       button {
         display: flex;
         align-items: center;
-        gap: 5px;
+        gap: 6px;
+        padding: 10px 18px; // ← MEJORADO: Padding más generoso
+        border-radius: 24px; // ← MEJORADO: Más redondeado
+        font-weight: 600;
+        font-size: 14px;
+        transition: all 0.2s;
+
+        mat-icon {
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+        }
+
+        &:hover {
+          background: #e8e8e8;
+        }
 
         &.liked {
           color: #e91e63;
+          background: rgba(233, 30, 99, 0.1);
+
+          &:hover {
+            background: rgba(233, 30, 99, 0.2);
+          }
         }
 
         &.active {
-          background-color: rgba(102, 126, 234, 0.1);
+          background: rgba(102, 126, 234, 0.1);
+          color: #667eea;
+
+          &:hover {
+            background: rgba(102, 126, 234, 0.2);
+          }
         }
 
         span {
           font-size: 14px;
-          font-weight: 500;
+          font-weight: 600;
         }
       }
 
       .spacer {
         flex: 1;
       }
+
+      button[mat-icon-button] {
+        color: #e91e63;
+        transition: all 0.2s;
+
+        &:hover {
+          background: rgba(233, 30, 99, 0.1);
+          transform: scale(1.1);
+        }
+      }
     }
   }
 }
 
-// Estilos de comentarios
+// ============================================
+// SECCIÓN DE COMENTARIOS
+// ============================================
 .comments-section {
   background: #f9f9f9;
-  padding: 15px;
-  margin-top: 10px;
+  padding: 24px; // ← MEJORADO: Más padding
+  border-top: 1px solid #e8e8e8;
 
   .comments-list {
-    max-height: 400px;
+    max-height: 500px;
     overflow-y: auto;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    padding-right: 8px; // ← AÑADIDO: Espacio para scrollbar
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #667eea;
+      border-radius: 10px;
+
+      &:hover {
+        background: #5568d3;
+      }
+    }
 
     .comment-item {
       display: flex;
-      gap: 12px;
-      padding: 12px;
+      gap: 14px; // ← MEJORADO: Más gap
+      padding: 18px; // ← MEJORADO: Más padding
       background: white;
-      border-radius: 8px;
-      margin-bottom: 10px;
-      transition: transform 0.1s;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      transition: all 0.2s;
 
       &:hover {
-        transform: translateX(2px);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        transform: translateX(4px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       }
 
       .comment-avatar {
         mat-icon {
-          font-size: 32px;
-          width: 32px;
-          height: 32px;
+          font-size: 36px;
+          width: 36px;
+          height: 36px;
           color: #667eea;
         }
       }
@@ -160,10 +383,10 @@
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: 5px;
+          margin-bottom: 8px;
 
           .comment-author {
-            font-weight: 600;
+            font-weight: 700;
             font-size: 14px;
             color: #333;
           }
@@ -177,7 +400,7 @@
         .comment-text {
           margin: 0;
           font-size: 14px;
-          line-height: 1.4;
+          line-height: 1.6;
           color: #555;
           white-space: pre-wrap;
           word-wrap: break-word;
@@ -188,17 +411,19 @@
 
   .no-comments {
     text-align: center;
-    padding: 20px;
+    padding: 40px 20px;
     color: #999;
     font-size: 14px;
     font-style: italic;
+    background: white;
+    border-radius: 12px;
+    margin-bottom: 20px;
   }
 
   .new-comment-form {
     display: flex;
-    gap: 10px;
-    align-items: flex-start;
-    margin-top: 15px;
+    gap: 12px;
+    align-items: flex-end;
 
     .full-width {
       flex: 1;
@@ -207,81 +432,141 @@
     ::ng-deep .mat-mdc-form-field {
       .mat-mdc-text-field-wrapper {
         background: white;
-        border-radius: 8px;
+        border-radius: 28px; // ← MEJORADO: Más redondeado
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        padding: 4px 16px; // ← AÑADIDO: Padding horizontal
+
+        input {
+          padding: 12px 8px; // ← AÑADIDO: Padding del input
+        }
       }
     }
 
     button {
-      margin-top: 8px;
-      background: #667eea;
+      background: linear-gradient(135deg, #667eea, #764ba2);
       color: white;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      transition: all 0.3s;
+      width: 48px; // ← AÑADIDO: Tamaño fijo
+      height: 48px;
 
       &:hover:not(:disabled) {
-        background: #5568d3;
+        transform: scale(1.05);
+        box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+      }
+
+      &:disabled {
+        opacity: 0.5;
       }
     }
   }
 }
 
+// ============================================
+// ESTADO VACÍO
+// ============================================
 .no-posts {
   text-align: center;
-  padding: 60px 20px;
+  padding: 80px 20px;
   color: #999;
 
   mat-icon {
-    font-size: 64px;
-    width: 64px;
-    height: 64px;
+    font-size: 80px;
+    width: 80px;
+    height: 80px;
     color: #ddd;
+    margin-bottom: 20px;
   }
 
   p {
-    margin-top: 15px;
+    margin: 0;
     font-size: 20px;
-    font-weight: 500;
+    font-weight: 600;
+    color: #999;
   }
 
   .subtitle {
     font-size: 16px;
     font-weight: 400;
     color: #bbb;
+    margin-top: 10px;
   }
 }
 
-// Responsive
+// ============================================
+// RESPONSIVE
+// ============================================
 @media (max-width: 600px) {
   .home-container {
-    padding: 10px;
+    padding: 16px; // ← MEJORADO: Más padding en móvil
   }
 
   .new-post-card {
+    border-radius: 12px;
     margin-bottom: 20px;
+    padding: 20px; // ← MEJORADO: Padding en móvil
+
+    h2 {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    .feed-filter button {
+      padding: 10px 20px;
+      font-size: 13px;
+    }
+
+    button[mat-raised-button] {
+      width: 100%; // ← AÑADIDO: Botón full width en móvil
+    }
   }
 
   .posts-feed .post-card {
+    margin-bottom: 16px;
+    border-radius: 12px;
+
     mat-card-header {
-      .post-avatar mat-icon {
-        font-size: 32px;
-        width: 32px;
-        height: 32px;
+      padding: 16px 20px;
+
+      .post-avatar {
+        width: 40px;
+        height: 40px;
+
+        mat-icon {
+          font-size: 28px;
+          width: 28px;
+          height: 28px;
+        }
+      }
+    }
+
+    ::ng-deep .mat-mdc-card-content {
+      padding: 20px !important;
+    }
+
+    mat-card-actions {
+      padding: 12px 20px;
+
+      button {
+        padding: 8px 14px;
+        font-size: 13px;
       }
     }
   }
 
   .comments-section {
-    padding: 10px;
+    padding: 16px;
 
     .comments-list .comment-item {
-      padding: 10px;
+      padding: 14px;
     }
 
     .new-comment-form {
-      flex-direction: column;
-      gap: 8px;
+      gap: 10px;
 
       button {
-        width: 100%;
-        margin-top: 0;
+        width: 44px;
+        height: 44px;
       }
     }
   }

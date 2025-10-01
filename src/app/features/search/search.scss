@@ -1,0 +1,215 @@
+.search-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.search-bar-wrapper {
+  margin-bottom: 30px;
+
+  .search-bar-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+
+    h2 {
+      margin: 0 0 20px 0;
+      color: white;
+      font-size: 24px;
+    }
+
+    .search-input-wrapper {
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+
+      .full-width {
+        flex: 1;
+      }
+
+      ::ng-deep .mat-mdc-form-field {
+        .mat-mdc-text-field-wrapper {
+          background: white;
+          border-radius: 8px;
+        }
+
+        .mat-mdc-form-field-label {
+          color: #667eea;
+        }
+
+        input {
+          color: #333;
+        }
+      }
+
+      button {
+        margin-top: 8px;
+        background: white;
+        color: #667eea;
+        min-width: 120px;
+
+        &:hover:not(:disabled) {
+          background: #f5f5f5;
+        }
+
+        &:disabled {
+          opacity: 0.6;
+        }
+      }
+    }
+  }
+}
+
+.search-results {
+  min-height: 400px;
+
+  .loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    gap: 20px;
+
+    p {
+      color: #999;
+      font-size: 16px;
+    }
+  }
+
+  .no-results {
+    text-align: center;
+    padding: 80px 20px;
+    color: #999;
+
+    mat-icon {
+      font-size: 80px;
+      width: 80px;
+      height: 80px;
+      color: #ddd;
+      margin-bottom: 20px;
+    }
+
+    h3 {
+      margin: 0 0 10px 0;
+      color: #666;
+      font-size: 24px;
+    }
+
+    p {
+      font-size: 16px;
+    }
+  }
+
+  .users-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+
+    .user-card {
+      transition: transform 0.2s, box-shadow 0.2s;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+      }
+
+      mat-card-header {
+        margin-bottom: 15px;
+
+        .user-avatar {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          border-radius: 50%;
+          width: 50px;
+          height: 50px;
+
+          mat-icon {
+            font-size: 40px;
+            width: 40px;
+            height: 40px;
+          }
+        }
+
+        mat-card-title {
+          font-weight: 600;
+          font-size: 18px;
+          color: #333;
+        }
+
+        mat-card-subtitle {
+          font-size: 14px;
+          color: #666;
+          margin-top: 4px;
+        }
+      }
+
+      mat-card-content {
+        flex: 1;
+        padding: 0 16px 16px 16px;
+
+        .user-bio {
+          font-size: 14px;
+          line-height: 1.5;
+          color: #555;
+          margin: 0;
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+      }
+
+      mat-card-actions {
+        padding: 16px;
+        display: flex;
+        justify-content: center;
+
+        button {
+          width: 100%;
+          background: #667eea;
+          color: white;
+
+          &:hover {
+            background: #5568d3;
+          }
+
+          mat-icon {
+            margin-right: 8px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .search-container {
+    padding: 10px;
+  }
+
+  .search-bar-wrapper {
+    .search-bar-card {
+      .search-input-wrapper {
+        flex-direction: column;
+        gap: 10px;
+
+        button {
+          width: 100%;
+          margin-top: 0;
+        }
+      }
+    }
+  }
+
+  .search-results {
+    .users-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}

@@ -1,0 +1,87 @@
+<div class="search-container">
+  
+  <!-- Barra de búsqueda -->
+  <div class="search-bar-wrapper">
+    <mat-card class="search-bar-card">
+      <mat-card-content>
+        <h2>Explorar Usuarios</h2>
+        <div class="search-input-wrapper">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Buscar por email o nombre</mat-label>
+            <input 
+              matInput 
+              [(ngModel)]="searchQuery"
+              (keyup.enter)="searchUsers()"
+              placeholder="ejemplo@gmail.com"
+              [disabled]="isSearching">
+            <button 
+              mat-icon-button 
+              matSuffix 
+              *ngIf="searchQuery"
+              (click)="clearSearch()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <button 
+            mat-raised-button 
+            color="primary" 
+            (click)="searchUsers()"
+            [disabled]="isSearching">
+            <mat-icon>search</mat-icon>
+            {{ isSearching ? 'Buscando...' : 'Buscar' }}
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Resultados de búsqueda -->
+  <div class="search-results">
+    
+    <!-- Cargando -->
+    <div class="loading-state" *ngIf="isSearching">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Buscando usuarios...</p>
+    </div>
+
+    <!-- Sin resultados -->
+    <div class="no-results" *ngIf="noResults && !isSearching">
+      <mat-icon>search_off</mat-icon>
+      <h3>No se encontraron usuarios</h3>
+      <p>Intenta con otro email o nombre</p>
+    </div>
+
+    <!-- Lista de usuarios -->
+    <div class="users-grid" *ngIf="!isSearching && !noResults">
+      <mat-card 
+        *ngFor="let user of searchResults" 
+        class="user-card">
+        
+        <mat-card-header>
+          <div mat-card-avatar class="user-avatar">
+            <mat-icon>account_circle</mat-icon>
+          </div>
+          <mat-card-title>{{ user.displayName || 'Usuario' }}</mat-card-title>
+          <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content *ngIf="user.bio">
+          <p class="user-bio">{{ user.bio }}</p>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <button 
+            mat-raised-button 
+            color="primary" 
+            (click)="startChat(user)">
+            <mat-icon>chat</mat-icon>
+            Enviar Mensaje
+          </button>
+        </mat-card-actions>
+
+      </mat-card>
+    </div>
+
+  </div>
+
+</div>

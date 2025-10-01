@@ -1,0 +1,59 @@
+<!-- Barra de navegación inferior -->
+<div class="bottom-nav">
+  <button 
+    mat-icon-button 
+    [class.active]="isActive('/home')"
+    (click)="navigateTo('/home')">
+    <mat-icon>{{ isActive('/home') ? 'home' : 'home_outlined' }}</mat-icon>
+    <span class="nav-label">Inicio</span>
+  </button>
+
+  <button 
+    mat-icon-button 
+    [class.active]="isActive('/search')"
+    (click)="navigateTo('/search')">
+    <mat-icon>{{ isActive('/search') ? 'search' : 'search' }}</mat-icon>
+    <span class="nav-label">Buscar</span>
+  </button>
+
+  <!-- Botón central flotante para crear post -->
+  <button 
+    mat-fab 
+    class="create-post-btn"
+    color="primary"
+    (click)="openCreatePost()">
+    <mat-icon>add</mat-icon>
+  </button>
+
+  <button 
+    mat-icon-button 
+    [class.active]="isActive('/messages')"
+    (click)="navigateTo('/messages')">
+    <mat-icon>{{ isActive('/messages') ? 'chat_bubble' : 'chat_bubble_outline' }}</mat-icon>
+    <span class="nav-label">Mensajes</span>
+  </button>
+
+  <button 
+    mat-icon-button 
+    [class.active]="isActive('/profile')"
+    (click)="navigateTo('/profile')">
+    <mat-icon>{{ isActive('/profile') ? 'person' : 'person_outline' }}</mat-icon>
+    <span class="nav-label">Perfil</span>
+  </button>
+</div>
+
+<!-- Modal flotante para crear post (estilo Instagram) -->
+<div class="create-post-overlay" *ngIf="showCreatePostDialog" (click)="closeCreatePost()">
+  <div class="create-post-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Crear publicación</h2>
+      <button mat-icon-button (click)="closeCreatePost()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    
+    <div class="modal-content">
+      <app-create-post (postCreated)="closeCreatePost()"></app-create-post>
+    </div>
+  </div>
+</div>

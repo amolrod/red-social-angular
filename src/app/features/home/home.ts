@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { PostService } from '../../core/services/post';
 import { AuthService } from '../../core/auth/auth';
+import { UserService } from '../../core/services/user';
 import { Post } from '../../models/post.model';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
@@ -17,23 +20,66 @@ export class Home implements OnInit {
   isLoading: boolean = false;
   currentUserId: string = '';
   
-  // Estado de comentarios
-  expandedPosts: Set<string> = new Set();  // Posts con comentarios expandidos
-  newComments: Map<string, string> = new Map();  // Texto de nuevos comentarios
+  expandedPosts: Set<string> = new Set();
+  newComments: Map<string, string> = new Map();
+  
+  showFollowingOnly: boolean = false;
+  currentUserFollowing: string[] = [];
 
   constructor(
     private postService: PostService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router,
+    private userService: UserService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    this.posts$ = this.postService.getPosts();
+    this.loadPosts();
     
-    this.authService.user$.subscribe(user => {
+    this.authService.user$.subscribe(async user => {
       if (user) {
         this.currentUserId = user.uid;
+        
+        const userProfile = await this.userService.getUserProfile(user.uid);
+        if (userProfile) {
+          this.currentUserFollowing = userProfile.following || [];
+          console.log('✅ Usuario cargado. Sigue a:', this.currentUserFollowing);
+        }
+        
+        this.loadPosts();
+        this.cdr.detectChanges();
       }
     });
+  }
+
+  loadPosts() {
+    this.posts$ = this.postService.getPosts().pipe(
+      map(posts => {
+        if (this.showFollowingOnly) {
+          if (this.currentUserFollowing.length === 0) {
+            console.log('⚠️ No sigues a nadie, mostrando solo tus posts');
+            return posts.filter(post => post.authorId === this.currentUserId);
+          }
+          
+          const filtered = posts.filter(post => 
+            this.currentUserFollowing.includes(post.authorId) || 
+            post.authorId === this.currentUserId
+          );
+          console.log(`✅ Filtrado: ${filtered.length} de ${posts.length} posts`);
+          return filtered;
+        }
+        
+        return posts;
+      })
+    );
+  }
+
+  toggleFeedFilter() {
+    this.showFollowingOnly = !this.showFollowingOnly;
+    console.log('🔄 Filtro:', this.showFollowingOnly ? 'Siguiendo' : 'Todos');
+    this.loadPosts();
+    this.cdr.detectChanges();
   }
 
   async createPost() {
@@ -76,7 +122,6 @@ export class Home implements OnInit {
     }
   }
 
-  // Toggle expandir/colapsar comentarios
   toggleComments(postId: string | undefined) {
     if (!postId) return;
     
@@ -92,7 +137,6 @@ export class Home implements OnInit {
     return this.expandedPosts.has(postId);
   }
 
-  // Añadir comentario
   async addComment(postId: string | undefined) {
     if (!postId) return;
     
@@ -101,20 +145,18 @@ export class Home implements OnInit {
 
     try {
       await this.postService.addComment(postId, commentText);
-      this.newComments.set(postId, '');  // Limpiar input
+      this.newComments.set(postId, '');
     } catch (error) {
       console.error('Error al añadir comentario:', error);
       alert('Error al comentar');
     }
   }
 
-  // Obtener texto del nuevo comentario
   getNewCommentText(postId: string | undefined): string {
     if (!postId) return '';
     return this.newComments.get(postId) || '';
   }
 
-  // Actualizar texto del nuevo comentario
   setNewCommentText(postId: string | undefined, text: string) {
     if (!postId) return;
     this.newComments.set(postId, text);
@@ -126,6 +168,10 @@ export class Home implements OnInit {
 
   isOwnPost(authorId: string): boolean {
     return authorId === this.currentUserId;
+  }
+
+  viewUserProfile(userId: string) {
+    this.router.navigate(['/user', userId]);
   }
 
   getPostDate(createdAt: Timestamp | Date): Date {

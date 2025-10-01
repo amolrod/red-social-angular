@@ -1,14 +1,15 @@
-import { Timestamp } from '@angular/fire/firestore';  // ← AÑADIR
+import { Timestamp } from '@angular/fire/firestore';
 
 export interface Post {
   id?: string;
   content: string;
   authorId: string;
   authorEmail: string;
-  createdAt: Timestamp | Date;  // ← CAMBIAR: puede ser Timestamp o Date
+  createdAt: Timestamp | Date;
   likes: number;
   likedBy: string[];
   comments: Comment[];
+  imageUrl?: string;  // ← AÑADIDO
 }
 
 export interface Comment {
@@ -16,5 +17,5 @@ export interface Comment {
   content: string;
   authorId: string;
   authorEmail: string;
-  createdAt: Timestamp | Date;  // ← CAMBIAR
+  createdAt: Timestamp | Date;
 }

@@ -12,6 +12,13 @@ import {
   Timestamp,
   getDoc
 } from '@angular/fire/firestore';
+import { 
+  Storage, 
+  ref, 
+  uploadBytes, 
+  getDownloadURL, 
+  deleteObject 
+} from '@angular/fire/storage';  // ← AÑADIDO
 import { Observable, firstValueFrom } from 'rxjs';
 import { Post } from '../../models/post.model';
 import { AuthService } from '../auth/auth';
@@ -19,6 +26,7 @@ import { AuthService } from '../auth/auth';
 @Injectable({ providedIn: 'root' })
 export class PostService {
   private firestore: Firestore = inject(Firestore);
+  private storage: Storage = inject(Storage);  // ← AÑADIDO
   private auth: AuthService = inject(AuthService);
   private injector: Injector = inject(Injector);
   private postsCollection = collection(this.firestore, 'posts');
@@ -28,9 +36,22 @@ export class PostService {
     return collectionData(postsQuery, { idField: 'id' }) as Observable<Post[]>;
   }
 
-  async createPost(content: string): Promise<void> {
+  // MÉTODO ACTUALIZADO - Ahora soporta imágenes
+  async createPost(content: string, imageFile?: File): Promise<void> {
     const user = await this.getCurrentUser();
     if (!user) throw new Error('Usuario no autenticado');
+
+    let imageUrl: string | undefined = undefined;
+
+    // Si hay imagen, subirla primero
+    if (imageFile) {
+      const timestamp = Date.now();
+      const imagePath = `posts/${user.uid}/${timestamp}_${imageFile.name}`;
+      const storageRef = ref(this.storage, imagePath);
+      
+      await uploadBytes(storageRef, imageFile);
+      imageUrl = await getDownloadURL(storageRef);
+    }
 
     const newPost: Omit<Post, 'id'> = {
       content,
@@ -39,7 +60,8 @@ export class PostService {
       createdAt: Timestamp.now() as any,
       likes: 0,
       likedBy: [],
-      comments: []
+      comments: [],
+      imageUrl  // ← AÑADIDO
     };
 
     await addDoc(this.postsCollection, newPost);
@@ -47,6 +69,23 @@ export class PostService {
 
   async deletePost(postId: string): Promise<void> {
     const postDoc = doc(this.firestore, 'posts/' + postId);
+    
+    // Obtener el post para eliminar la imagen si existe
+    const postSnap = await getDoc(postDoc);
+    if (postSnap.exists()) {
+      const post = postSnap.data() as Post;
+      
+      // Eliminar imagen de Storage si existe
+      if (post.imageUrl) {
+        try {
+          const imageRef = ref(this.storage, post.imageUrl);
+          await deleteObject(imageRef);
+        } catch (error) {
+          console.warn('No se pudo eliminar la imagen:', error);
+        }
+      }
+    }
+    
     await deleteDoc(postDoc);
   }
 

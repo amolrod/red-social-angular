@@ -1,0 +1,46 @@
+.create-post-form {
+  padding: 24px;
+
+  .full-width {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  ::ng-deep .mat-mdc-form-field {
+    .mat-mdc-text-field-wrapper {
+      background: #f9f9f9;
+    }
+
+    textarea {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+  }
+
+  .publish-btn {
+    width: 100%;
+    height: 52px;
+    border-radius: 26px;
+    font-size: 16px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    transition: all 0.3s;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      background: #ccc;
+      box-shadow: none;
+    }
+  }
+}

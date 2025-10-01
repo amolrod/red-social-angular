@@ -2,57 +2,69 @@ import { Injectable, inject } from '@angular/core';
 import { 
   Firestore, 
   doc, 
-  setDoc, 
-  getDoc,
+  getDoc, 
+  setDoc,
   updateDoc
 } from '@angular/fire/firestore';
+import { Auth } from '@angular/fire/auth';
 import { UserProfile } from '../../models/user-profile.model';
-import { AuthService } from '../auth/auth';
-import { firstValueFrom } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private firestore: Firestore = inject(Firestore);
-  private auth: AuthService = inject(AuthService);
+  private auth: Auth = inject(Auth);
 
-  async createOrUpdateProfile(userId: string, data: Partial<UserProfile>): Promise<void> {
-    const userDoc = doc(this.firestore, 'users/' + userId);
-    await setDoc(userDoc, data, { merge: true });
-  }
+  async getUserProfile(uid: string): Promise<UserProfile | null> {
+    const userDoc = doc(this.firestore, `users/${uid}`);
+    const userSnap = await getDoc(userDoc);
 
-  async getUserProfile(userId: string): Promise<UserProfile | null> {
-    const userDoc = doc(this.firestore, 'users/' + userId);
-    const docSnap = await getDoc(userDoc);
-    
-    if (docSnap.exists()) {
-      return docSnap.data() as UserProfile;
+    if (userSnap.exists()) {
+      return userSnap.data() as UserProfile;
     }
     return null;
   }
 
-  async getCurrentUserProfile(): Promise<UserProfile | null> {
-    const user = await firstValueFrom(this.auth.user$);
-    if (!user) return null;
-    
-    let profile = await this.getUserProfile(user.uid);
-    
-    if (!profile) {
-      profile = {
-        uid: user.uid,
-        email: user.email || '',
-        createdAt: new Date()
-      };
-      await this.createOrUpdateProfile(user.uid, profile);
-    }
-    
-    return profile;
+  async createUserProfile(userProfile: UserProfile): Promise<void> {
+    const userDoc = doc(this.firestore, `users/${userProfile.uid}`);
+    await setDoc(userDoc, userProfile);
   }
 
-  async updateCurrentUserProfile(data: Partial<UserProfile>): Promise<void> {
-    const user = await firstValueFrom(this.auth.user$);
-    if (!user) throw new Error('Usuario no autenticado');
+  async updateUserProfile(userProfile: UserProfile): Promise<void> {
+    if (!userProfile.uid) {
+      throw new Error('UID del usuario no proporcionado');
+    }
+
+    const userDocRef = doc(this.firestore, `users/${userProfile.uid}`);
     
-    const userDoc = doc(this.firestore, 'users/' + user.uid);
-    await updateDoc(userDoc, data);
+    await updateDoc(userDocRef, {
+      displayName: userProfile.displayName || '',
+      bio: userProfile.bio || '',
+      photoURL: userProfile.photoURL || ''
+    });
+  }
+
+  async getCurrentUserProfile(): Promise<UserProfile | null> {
+    const currentUser = this.auth.currentUser;
+    
+    if (!currentUser) {
+      throw new Error('No hay usuario autenticado');
+    }
+    
+    return this.getUserProfile(currentUser.uid);
+  }
+
+  async updateCurrentUserProfile(updates: Partial<UserProfile>): Promise<void> {
+    const currentUser = this.auth.currentUser;
+    
+    if (!currentUser) {
+      throw new Error('No hay usuario autenticado');
+    }
+
+    const userDocRef = doc(this.firestore, `users/${currentUser.uid}`);
+    
+    await updateDoc(userDocRef, {
+      ...updates,
+      email: currentUser.email || ''
+    });
   }
 }

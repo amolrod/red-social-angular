@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { provideStorage, getStorage } from '@angular/fire/storage';
 import { environment } from '../environments/environment';
 
 // Angular Material
@@ -21,19 +22,23 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';  // ← AÑADIR
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LayoutModule } from '@angular/cdk/layout';
 
-// Layout y páginas
+// Componentes
 import { AppComponent } from './app';
 import { MainLayoutComponent } from './layout/main-layout/main-layout';
 import { Home } from './features/home/home';
 import { Profile } from './features/profile/profile';
 import { Messages } from './features/messages/messages';
+import { Search } from './features/search/search';
+import { UserProfileComponent } from './features/user-profile/user-profile';
 import { SignIn } from './features/auth/sign-in/sign-in';
 import { SignUp } from './features/auth/sign-up/sign-up';
+import { BottomNavComponent } from './shared/bottom-nav/bottom-nav.component';
+import { CreatePostComponent } from './shared/create-post/create-post.component';
 
-// Guard funcional
+// Guard
 import { authGuard } from './core/auth/auth-guard';
 
 @NgModule({
@@ -43,8 +48,12 @@ import { authGuard } from './core/auth/auth-guard';
     Home,
     Profile,
     Messages,
+    Search,
+    UserProfileComponent,
     SignIn,
-    SignUp
+    SignUp,
+    BottomNavComponent,
+    CreatePostComponent
   ],
   imports: [
     BrowserModule,
@@ -59,10 +68,12 @@ import { authGuard } from './core/auth/auth-guard';
       { path: 'home', component: Home, canActivate: [authGuard] },
       { path: 'profile', component: Profile, canActivate: [authGuard] },
       { path: 'messages', component: Messages, canActivate: [authGuard] },
+      { path: 'search', component: Search, canActivate: [authGuard] },
+      { path: 'user/:userId', component: UserProfileComponent, canActivate: [authGuard] },
       { path: '**', redirectTo: 'home' }
     ]),
 
-    // Material
+    // Material Modules
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
@@ -73,13 +84,14 @@ import { authGuard } from './core/auth/auth-guard';
     MatCardModule,
     MatInputModule,
     MatFormFieldModule,
-    MatProgressSpinnerModule,  // ← AÑADIR
+    MatProgressSpinnerModule,
     LayoutModule
   ],
   providers: [
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore())
+    provideFirestore(() => getFirestore()),
+    provideStorage(() => getStorage())
   ],
   bootstrap: [AppComponent]
 })

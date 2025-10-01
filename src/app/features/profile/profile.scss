@@ -4,168 +4,210 @@
   padding: 20px;
 }
 
-.profile-card {
-  margin-bottom: 30px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 20px;
 
+  p {
+    font-size: 16px;
+    color: #666;
+  }
+}
+
+.profile-content {
   .profile-header {
-    display: flex;
-    gap: 30px;
-    align-items: flex-start;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
 
-    .profile-avatar {
-      mat-icon {
-        font-size: 120px;
-        width: 120px;
-        height: 120px;
-        color: white;
-      }
-    }
+    .profile-header-content {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 10px;
 
-    .profile-info {
-      flex: 1;
-
-      h2 {
-        margin: 0 0 10px 0;
-        font-size: 28px;
-        color: white;
-      }
-
-      .email {
-        font-size: 16px;
-        opacity: 0.9;
-        margin-bottom: 15px;
-      }
-
-      .bio {
-        font-size: 14px;
-        line-height: 1.6;
-        margin-bottom: 20px;
-        padding: 10px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-
-        &.placeholder {
-          opacity: 0.7;
-          font-style: italic;
+      .avatar {
+        mat-icon {
+          font-size: 80px;
+          width: 80px;
+          height: 80px;
+          color: white;
         }
       }
 
-      button {
-        background: white;
-        color: #667eea;
+      .profile-info {
+        flex: 1;
 
-        &:hover {
-          background: #f5f5f5;
-        }
-      }
-
-      .full-width {
-        width: 100%;
-        margin-bottom: 15px;
-      }
-
-      ::ng-deep .mat-mdc-form-field {
-        .mat-mdc-text-field-wrapper {
-          background: white;
-          border-radius: 8px;
+        h1 {
+          margin: 0 0 8px 0;
+          font-size: 28px;
+          font-weight: 700;
         }
 
-        .mat-mdc-form-field-label {
-          color: #667eea;
+        .email {
+          margin: 0 0 8px 0;
+          font-size: 14px;
+          opacity: 0.9;
         }
-      }
 
-      .edit-actions {
-        display: flex;
-        gap: 10px;
-
-        button {
-          background: white;
-          color: #667eea;
+        .bio {
+          margin: 0;
+          font-size: 16px;
+          opacity: 0.95;
         }
       }
     }
   }
 
   .profile-stats {
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.3);
-    display: flex;
-    gap: 30px;
-
-    .stat-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
-
-      mat-icon {
-        font-size: 32px;
-        width: 32px;
-        height: 32px;
-      }
-
-      .stat-number {
-        font-size: 24px;
-        font-weight: 700;
-      }
-
-      .stat-label {
-        font-size: 14px;
-        opacity: 0.9;
-      }
-    }
-  }
-}
-
-.user-posts-section {
-  h3 {
-    margin-bottom: 20px;
-    color: #333;
-  }
-
-  .posts-grid {
     display: grid;
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-bottom: 30px;
 
-    .post-card {
+    .stat-card {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       transition: transform 0.2s, box-shadow 0.2s;
 
       &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        transform: translateY(-4px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
       }
 
-      mat-card-header {
-        margin-bottom: 10px;
+      mat-icon {
+        font-size: 36px;
+        width: 36px;
+        height: 36px;
+        color: #667eea;
       }
 
-      mat-card-content {
-        p {
+      .stat-content {
+        display: flex;
+        flex-direction: column;
+
+        .stat-number {
+          font-size: 28px;
+          font-weight: 700;
+          color: #333;
+        }
+
+        .stat-label {
+          font-size: 14px;
+          color: #666;
+        }
+      }
+    }
+  }
+
+  .edit-profile-card {
+    margin-bottom: 30px;
+
+    mat-card-header {
+      margin-bottom: 15px;
+
+      mat-card-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 20px;
+        font-weight: 600;
+
+        mat-icon {
+          color: #667eea;
+        }
+      }
+    }
+
+    .full-width {
+      width: 100%;
+      margin-bottom: 15px;
+    }
+
+    .edit-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+
+      button {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+    }
+  }
+
+  .my-posts-section {
+    h2 {
+      margin: 0 0 20px 0;
+      font-size: 24px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .posts-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+
+      .post-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 10px;
+
+          .post-date {
+            font-size: 12px;
+            color: #999;
+          }
+        }
+
+        .post-content {
           font-size: 16px;
           line-height: 1.6;
           color: #333;
           white-space: pre-wrap;
           word-wrap: break-word;
+          margin: 0 0 15px 0;
         }
-      }
 
-      mat-card-actions {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-
-        button {
+        .post-stats {
           display: flex;
-          align-items: center;
-          gap: 5px;
-        }
+          gap: 20px;
+          padding-top: 10px;
+          border-top: 1px solid #eee;
 
-        .spacer {
-          flex: 1;
+          .stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            color: #666;
+
+            mat-icon {
+              font-size: 18px;
+              width: 18px;
+              height: 18px;
+              color: #667eea;
+            }
+          }
         }
       }
     }
@@ -180,27 +222,13 @@
         width: 64px;
         height: 64px;
         color: #ddd;
+        margin-bottom: 15px;
       }
 
       p {
-        margin-top: 15px;
         font-size: 18px;
       }
     }
-  }
-}
-
-.loading-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 400px;
-  gap: 20px;
-
-  p {
-    color: #999;
-    font-size: 16px;
   }
 }
 
@@ -209,16 +237,21 @@
     padding: 10px;
   }
 
-  .profile-card {
-    .profile-header {
+  .profile-content {
+    .profile-header .profile-header-content {
       flex-direction: column;
-      align-items: center;
       text-align: center;
+    }
 
-      .profile-avatar mat-icon {
-        font-size: 80px;
-        width: 80px;
-        height: 80px;
+    .profile-stats {
+      grid-template-columns: 1fr;
+    }
+
+    .edit-profile-card .edit-actions {
+      flex-direction: column;
+
+      button {
+        width: 100%;
       }
     }
   }

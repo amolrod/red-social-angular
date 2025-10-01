@@ -1,4 +1,3 @@
-<!-- Layout principal de la red social -->
 <mat-toolbar color="primary" class="main-toolbar">
   <!-- Botón de menú para móvil -->
   <button mat-icon-button class="menu-button" (click)="toggleSidenav()">
@@ -11,13 +10,19 @@
   <!-- Spacer para empujar elementos a la derecha -->
   <span class="spacer"></span>
   
-  <!-- Navegación para escritorio (SIN Perfil) -->
+  <!-- Navegación para escritorio -->
   <div class="desktop-nav">
-    <button mat-button routerLink="/home">
+    <button mat-button routerLink="/home" routerLinkActive="active">
       <mat-icon>home</mat-icon>
       Inicio
     </button>
-    <button mat-button routerLink="/messages">
+    
+    <button mat-button routerLink="/search" routerLinkActive="active">
+      <mat-icon>search</mat-icon>
+      Explorar
+    </button>
+    
+    <button mat-button routerLink="/messages" routerLinkActive="active">
       <mat-icon>message</mat-icon>
       Mensajes
     </button>
@@ -48,18 +53,26 @@
 
 <!-- Contenido principal -->
 <mat-sidenav-container class="main-container">
-  <!-- Menú lateral para móvil (SIN Perfil) -->
+  <!-- Menú lateral para móvil -->
   <mat-sidenav #sidenav class="mobile-sidenav" mode="over">
     <mat-nav-list>
       <a mat-list-item routerLink="/home" (click)="closeSidenav()">
         <mat-icon>home</mat-icon>
         <span>Inicio</span>
       </a>
+      
+      <a mat-list-item routerLink="/search" (click)="closeSidenav()">
+        <mat-icon>search</mat-icon>
+        <span>Explorar</span>
+      </a>
+      
       <a mat-list-item routerLink="/messages" (click)="closeSidenav()">
         <mat-icon>message</mat-icon>
         <span>Mensajes</span>
       </a>
+      
       <mat-divider></mat-divider>
+      
       <a mat-list-item (click)="logout()">
         <mat-icon>exit_to_app</mat-icon>
         <span>Cerrar Sesión</span>
